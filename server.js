@@ -2,32 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Todo from './models/Todo.js';
+import todoRoutes from "./routes/todoRoutes.js";
 
 dotenv.config()
 const port = 3000;
-
 const app = express();
+
 app.use(cors());
 app.use(express.json());
-
-app.get('/', async (req, res) => {
-    const todos = await Todo.find();
-    res.json({ mensagem: 'todas tarefas', dados: todos });
-})
-
-app.post('/tarefa', async (req, res) => {
-    try {
-        const { titulo, concluida } = req.body;
-
-        const novaTarefa = new Todo({ titulo, concluida });
-        const salva = await novaTarefa.save();
-
-        res.json({ mensagem: 'tarefa cadastrada', dados: salva });
-    } catch (err) {
-        res.status(500).json({ erro: 'Erro ao salvar tarefa', detalhes: err.message });
-    }
-});
+app.use("/tarefas", todoRoutes);
 
 mongoose
     .connect(process.env.MONGO_URI)
