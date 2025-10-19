@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import Todo from './models/Todo'
+import Todo from './models/Todo.js';
 
 dotenv.config()
 const port = 3000;
@@ -11,8 +11,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Servidor ok');
+app.get('/', async (req, res) => {
+    const todos = await Todo.find();
+    res.json({ mensagem: 'todas tarefas', dados: todos });
 })
 
 app.post('/tarefa', async (req, res) => {
@@ -20,7 +21,7 @@ app.post('/tarefa', async (req, res) => {
         const { titulo, concluida } = req.body;
 
         const novaTarefa = new Todo({ titulo, concluida });
-        const salva = novaTarefa.save();
+        const salva = await novaTarefa.save();
 
         res.json({ mensagem: 'tarefa cadastrada', dados: salva });
     } catch (err) {
