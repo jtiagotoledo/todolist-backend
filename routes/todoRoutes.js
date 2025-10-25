@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/',todasTarefas);
 router.post('/',addTarefa);
-router.put('/:id',toggleTodo);
+router.put('/:id/toggle',toggleTodo);
 router.delete('/:id',deleteTarefa);
 
 export default router;
